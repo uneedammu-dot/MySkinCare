@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facial Skincare Recommendation System</title>
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- MediaPipe Face Mesh Dependencies for Face Detection -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!-- ==================== VIEW 1: ATTRACTIVE LANDING PAGE ==================== -->
+<section id="view-landing" class="view active">
+
+    <div class="hero-landing">
+
+        <!-- Decorative background -->
+        <div class="hero-decoration hero-decoration-left"></div>
+        <div class="hero-decoration hero-decoration-bottom"></div>
+
+        <!-- LEFT / CENTER CONTENT -->
+        <div class="hero-content">
+
+            <span class="hero-small-title">
+                Facial Skincare Recommendation System
+            </span>
+
+            <h1>
+                Facial Skincare<br>
+                <span>Recommendation System</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Discover your skin type and get personalized skincare
+                recommendations for a healthier, glowing you.
+            </p>
+
+            <p class="hero-description">
+                Our system helps you understand your skin through simple
+                questions or a face scan, and suggests suitable products
+                from Ayurvedic, Home Remedies, and Cosmetics.
+            </p>
+
+            <!-- Feature Cards -->
+            <div class="hero-features">
+
+                <div class="hero-feature">
+                    <div class="feature-icon ayurvedic-icon">🌿</div>
+                    <div>
+                        <strong>Ayurvedic</strong>
+                        <small>Natural care</small>
+                    </div>
+                </div>
+
+                <div class="hero-feature">
+                    <div class="feature-icon remedy-icon">🌸</div>
+                    <div>
+                        <strong>Home Remedies</strong>
+                        <small>Simple & effective</small>
+                    </div>
+                </div>
+
+                <div class="hero-feature">
+                    <div class="feature-icon cosmetic-icon">🧴</div>
+                    <div>
+                        <strong>Cosmetics</strong>
+                        <small>Trusted products</small>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Start Button -->
+            <button
+                class="hero-start-btn"
+                onclick="showView('view-login')">
+                Start Now <span>→</span>
+            </button>
+
+            <p class="hero-footer">
+                Understand Your Skin &nbsp;•&nbsp;
+                Choose Better &nbsp;•&nbsp;
+                Care Better
+            </p>
+
+        </div>
+
+        <!-- RIGHT SIDE GIRL + BOTTOM PRODUCTS -->
+        <div class="hero-image-area">
+
+            <!-- Use your uploaded image here -->
+            <img
+                src="https://i.postimg.cc/CK28GbPX/file-00000000762081f5800d587e16340b49.png"
+                alt="Facial Skincare"
+                class="hero-main-image"
+            >
+
+        </div>
+
+    </div>
+
+</section>   
+    <!-- ==================== VIEW 2: LOGIN PAGE ==================== -->
+    <section id="view-login" class="view">
+        <div class="login-container">
+            <div class="login-left">
+                <div class="brand-logo">
+                    <span><img src="https://i.postimg.cc/Wby3tNdW/IMG-20260922-WA0001.jpg"  width="100" height="100" alt="Brand Logo"></span>
+                </div>
+                <h2>FACIAL SKIN CARE</h2>
+                <p class="brand-sub">Personalized Care for Healthy & Glowing Skin</p>
+                <div class="login-steps">
+                    <span>Scan</span> | <span>Analyze</span> | <span>Get Recommendations</span>
+                </div>
+            </div>
+
+            <div class="login-right">
+                <div class="login-card">
+                    <h3>Login</h3>
+                    <p class="login-sub">Welcome back! Please login to continue with your skin care journey.</p>
+
+                    <form id="login-form" onsubmit="handleLogin(event)">
+                        <div class="input-group">
+                            <label for="username">Email or Username</label>
+                            <input type="text" id="username" placeholder="Enter your email or username" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Enter your password" required>
+                        </div>
+
+                        <div class="login-options">
+                            <label><input type="checkbox" checked> Remember me</label>
+                            <a href="#" class="forgot-link">Forgot Password?</a>
+                        </div>
+
+                        <button type="submit" class="btn btn-login">Login &rarr;</button>
+
+                        <div class="divider">or</div>
+
+                        <button type="button" class="btn btn-outline" onclick="handleLoginDirect()">Create New Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== VIEW 3: MAIN ANALYSIS APP ==================== -->
+    <section id="view-app" class="view">
+        <div class="user-nav">
+            <span class="user-greeting">Welcome, <strong id="user-name-display">User</strong>!</span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <header>
+            <span class="header-badge">AI Skin Analysis</span>
+            <h1>🌱 Facial Skin Care Recommendation System</h1>
+            <p>Find the best tailored routine through a smart scan or direct selection!</p>
+        </header>
+
+        <div class="container">
+            <!-- Navigation Tabs -->
+            <div class="tabs">
+                <button id="tab-scan" class="tab-btn active" onclick="switchTab('scan-mode', event)">1. Face Scan & Quiz</button>
+                <button id="tab-direct" class="tab-btn" onclick="switchTab('direct-mode', event)">2. Direct Skin Type Selection</button>
+            </div>
+
+            <!-- TAB 1: SCAN & QUIZ FLOW -->
+            <div id="scan-mode" class="tab-content active">
+                
+                <!-- PAGE 1: SCAN & QUESTIONNAIRE -->
+                <section id="page-quiz" class="page-step active">
+                    <h2>Face Scan & Upload</h2>
+                    <div class="scanner-container">
+                        <div id="scanner-box" class="scanner-box">
+                            <video id="webcam" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 50%;"></video>
+                            <img id="scanned-preview" style="width: 100%; height: 100%; object-fit: cover; display: none; border-radius: 50%;" alt="Scanned Face">
+                            <div id="scan-laser" class="scan-laser"></div>
+                        </div>
+                        <p id="scan-status">Position your face within the frame</p>
+                        <div class="scan-controls">
+                            <button class="btn" type="button" onclick="startFaceScan()">Start Live Face Scan</button>
+                            <label for="file-upload" class="btn upload-btn">Upload Face Image</label>
+                            <input type="file" id="file-upload" accept="image/*" onchange="handleImageUpload(event)" style="display: none;">
+                            <button id="scan-upload-btn" class="btn btn-warning" type="button" style="display: none;" onclick="scanUploadedImage()">Scan Uploaded Image</button>
+                        </div>
+                    </div>
+
+                    <h2 style="margin-top: 30px;">Questions</h2>
+                    <form id="quiz-form" onsubmit="submitQuiz(event)">
+                        <div class="question">
+                            <p>1. How does your skin feel after washing your face?</p>
+                            <label><input type="radio" name="q1" value="normal" >Soft & Comfort</label><br>
+                            <label><input type="radio" name="q1" value="oily"> Clean But Becomes Sticky</label><br>
+                            <label><input type="radio" name="q1" value="combination"> T-Zone Oily & Cheeks Dry</label><br>
+                            <label><input type="radio" name="q1" value="dry">Feels Tight</label><br>
+                            <label><input type="radio" name="q1" value="sensitive">  Itchy,Burning or Irritated</label>
+                        </div>
+
+                        <div class="question">
+                            <p>2. How often do you get pimples?</p>
+                            <label><input type="radio" name="q2" value="oily" required>Frequently</label><br>
+                            <label><input type="radio" name="q2" value="dry">Rarely</label><br>
+                            <label><input type="radio" name="q2" value="combination"> Sometimes,Mainly On T-Zone</label><br>
+                            <label><input type="radio" name="q2" value="normal"> Occasionally</label><br>
+                            <label><input type="radio" name="q2" value="sensitive">Sometimes After Using Products</label>
+                        </div>
+
+                        <div class="question">
+                            <p>3. How much time do you spend in sunlight?</p>
+                            <label><input type="radio" name="q3" value="oily" required> More Than 2 hours</label><br>
+                            <label><input type="radio" name="q3" value="dry"> Less Than 1 hour</label><br>
+                            <label><input type="radio" name="q3" value="combination"> 1-2 hours</label><br>
+                            <label><input type="radio" name="q3" value="normal"> Around 1 hour</label><br>
+                            <label><input type="radio" name="q3" value="sensitive"> Less than 1 hour </label>
+                        </div>
+
+                        <button type="submit" class="btn submit-btn">Get Skin Recommendations</button>
+                    </form>
+                </section>
+
+                <!-- PAGE 2: RESULT SUMMARY -->
+                <section id="page-detection" class="page-step" style="display: none;">
+                    <h2>Skin Type Result</h2>
+                    <div class="detection-card">
+                        <div id="detection-badge" class="type-badge">Analyzing...</div>
+                        <h3 id="detected-type-title">--</h3>
+                        <p id="detected-type-desc">--</p>
+                    </div>
+                    
+                    <div class="page-navigation-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="goToPage('page-quiz')">⬅️ Back to Quiz</button>
+                        <button type="button" class="btn btn-success" onclick="goToPage('page-recommendations')">Proceed to Recommendations ➔</button>
+                    </div>
+                </section>
+
+                <!-- PAGE 3: RECOMMENDATIONS OUTPUT -->
+                <section id="page-recommendations" class="page-step" style="display: none;">
+                    <h2>Skincare Recommendations</h2>
+                    <div id="results-container">
+                        <h2 id="result-title"></h2>
+                        <div id="recommendations-output"></div>
+                    </div>
+                    
+                    <div class="page-navigation-buttons" style="margin-top: 20px;">
+                        <button type="button" class="btn btn-secondary" onclick="goToPage('page-detection')">⬅️ Back to Skin Direction</button>
+                        <button type="button" class="btn" onclick="resetQuiz()">🔄 Restart</button>
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- TAB 2: DIRECT MODE -->
+            <section id="direct-mode" class="tab-content" style="display: none;">
+                <h2>Select Your Skin Type Directly</h2>
+                <div class="skin-cards">
+                    <div class="skin-card" onclick="loadDirectRecommendations('oily')">
+                        <img src="https://i.postimg.cc/pVkLMdVc/oilyss.jpg" alt="Oily Skin" onerror="this.src='https://via.placeholder.com/90?text=Oily';">
+                        <h3>Oily Skin 💧</h3>
+                        <p>Excess sebum, enlarged pores, acne-prone</p>
+                    </div>
+
+                    <div class="skin-card" onclick="loadDirectRecommendations('dry')">
+                        <img src="https://i.postimg.cc/TPm3zqhb/dryss.jpg" alt="Dry Skin" onerror="this.src='https://via.placeholder.com/90?text=Dry';">
+                        <h3>Dry Skin 🌵</h3>
+                        <p>Flaky, rough texture, tight feeling</p>
+                    </div>
+
+                    <div class="skin-card" onclick="loadDirectRecommendations('combination')">
+                        <img src="https://i.postimg.cc/Pf11WY4j/combination.jpg" alt="Combination Skin" onerror="this.src='https://via.placeholder.com/90?text=Combo';">
+                        <h3>Combination Skin ⚖️</h3>
+                        <p>Oily T-zone with normal/dry cheeks</p>
+                    </div>
+
+                    <div class="skin-card" onclick="loadDirectRecommendations('normal')">
+                        <img src="https://i.postimg.cc/YqqjvWyc/normalss.jpg" alt="Normal Skin" onerror="this.src='https://via.placeholder.com/90?text=Normal';">
+                        <h3>Normal Skin ✨</h3>
+                        <p>Well-balanced, clear, and radiant</p>
+                    </div>
+
+                    <div class="skin-card" onclick="loadDirectRecommendations('sensitive')">
+                        <img src="https://i.postimg.cc/sgLBdgmR/sensitivess.jpg" alt="Sensitive Skin" onerror="this.src='https://via.placeholder.com/90?text=Sensitive';">
+                        <h3>Sensitive Skin 🌸</h3>
+                        <p>Easily irritated, red, and reactive</p>
+                    </div>
+                </div>
+
+                <div id="direct-results-container" style="display: none; margin-top: 30px;">
+                    <h2 id="direct-result-title"></h2>
+                    <div id="direct-recommendations-output"></div>
+                </div>
+                    <div style="text-align: center ;margin-top: 30px;">
+                        <button type="button" class="btn" onclick="scrollToSkinCards()">🔄Start</button>
+                    </div>
+                    
+            </section>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
